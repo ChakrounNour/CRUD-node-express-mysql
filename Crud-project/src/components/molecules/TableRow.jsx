@@ -1,18 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import TableCell from "../atoms/table/TableCell";
 import CustomButtonDelete from "./CustomButtonDelete";
 import CustomButtonEdit from "./CustomButtonEdit";
+import Modal from "../atoms/modal/Modal";
+import { BsTrash } from "react-icons/bs";
 
-const TableRow = ({ cells, showEditButton = true, className, ...props }) => {
+const TableRow = ({
+  cells,
+  onDelete,
+  showEditButton = true,
+  className,
+  ...props
+}) => {
   return (
     <tr className={className} {...props}>
-      {cells.slice(0, -1).map((cell, index) => (
-        <TableCell key={index}>{cell}</TableCell>
+      {cells.map((cell, index) => (
+        <>
+          <TableCell key={index}>{cell}</TableCell>
+        </>
       ))}
-      <td className="sm:p-4 ms-2 xs:xs-2 sm:ms-4 inline-flex">
-        {showEditButton && <CustomButtonEdit />}
-        <CustomButtonDelete />
-      </td>
     </tr>
   );
 };

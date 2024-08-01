@@ -1,6 +1,7 @@
+import axios from "axios";
 import http from "../http-common";
 
-const getAll = () => {
+const getAll = async () => {
   return http.get("/books");
 };
 const get = (id) => {
@@ -12,7 +13,7 @@ const create = (data) => {
 };
 
 const update = (id, data) => {
-  return http.put(`/books/${id}`, data);
+  return http.patch(`/books/${id}`, data);
 };
 const deletes = (id) => {
   return http.delete(`/books/${id}`);

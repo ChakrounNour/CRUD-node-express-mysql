@@ -1,15 +1,17 @@
 import React from "react";
-import { BsXLg } from "react-icons/bs";
 import CustomButton from "../atoms/button/Button";
+import { BsFillEyeFill } from "react-icons/bs";
 
-export default function CustomButtonDelete({ onClick }) {
+function CustomButtonView({ onClick }) {
   return (
     <CustomButton
-      variant="red-outline-border"
+      variant="blue-outline"
       className="bg-transparent px-2.5 py-2.5 xs:px-1.5 xs:py-1.5 sm:px-2 sm:py-2 mr-2"
-      icon={<BsXLg />}
+      icon={<BsFillEyeFill />}
       onClick={onClick}
-      aria-label="Delete"
+      aria-label="Edit"
     />
   );
 }
+
+export default CustomButtonView;

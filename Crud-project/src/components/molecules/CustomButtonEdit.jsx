@@ -6,7 +6,7 @@ export default function CustomButtonEdit({ onClick }) {
   return (
     <CustomButton
       variant="secondary-outline"
-      className="px-2.5 py-2.5 xs:px-1.5 xs:py-1.5 sm:px-2 sm:py-2 mr-2"
+      className="bg-transparent px-2.5 py-2.5 xs:px-1.5 xs:py-1.5 sm:px-2 sm:py-2 mr-2"
       icon={<BsPencil />}
       onClick={onClick}
       aria-label="Edit"
