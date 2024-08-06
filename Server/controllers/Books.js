@@ -1,15 +1,37 @@
 import Books from "../models/BookModel.js";
-import { Op, Sequelize } from "sequelize";
+import { Op } from "sequelize";
 
 export const getBooks = async (req, res) => {
   try {
-    const books = await Books.findAll();
-    res.json(books);
+    const page = parseInt(req.query.page) || 0;
+    const limit = parseInt(req.query.limit) || 4;
+    const search = req.query.search_query || "";
+    const offset = page * limit;
+    const totalRows = await Books.count({
+      where: { title: { [Op.like]: `%${search}%` } },
+    });
+    const totalPage = Math.ceil(totalRows / limit);
+    const result = await Books.findAll({
+      where: { title: { [Op.like]: `%${search}%` } },
+      limit: limit,
+      offset: offset,
+      order: [["id", "DESC"]],
+    });
+    res.json({
+      result: result,
+      page: page,
+      limit: limit,
+      totalRows: totalRows,
+      totalPage: totalPage,
+    });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: error.msg });
+    console.error(error);
+    res.status(500).json({
+      msg: error.message || "An error occurred while retrieving books.",
+    });
   }
 };
+
 export const getBooksById = async (req, res) => {
   try {
     const books = await Books.findOne({
@@ -59,34 +81,6 @@ export const createBooks = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(400).json({ msg: error.message });
-  }
-};
-export const getBooksByTitle = async (req, res) => {
-  try {
-    const { title } = req.body; // Assuming title is directly in req.body
-    if (!title) {
-      return res.status(400).json({ msg: "Title query parameter is required" });
-    }
-    console.log(`Searching for books with title containing: ${title}`); // Debug log
-
-    // Use a raw query
-    const books = await sequelize.query(
-      "SELECT * FROM Books WHERE title LIKE :title",
-      {
-        replacements: { title: `%${title}%` },
-        type: sequelize.QueryTypes.SELECT,
-      }
-    );
-
-    if (books.length === 0) {
-      return res
-        .status(404)
-        .json({ msg: "No books found with the given title" });
-    }
-    res.status(200).json(books);
-  } catch (error) {
-    console.error("Error in getBooksByTitle:", error); // Log error
-    res.status(500).json({ msg: error.message });
   }
 };
 

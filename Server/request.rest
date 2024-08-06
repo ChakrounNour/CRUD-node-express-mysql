@@ -11,8 +11,14 @@ Content-Type: application/json
 GET http://localhost:5000/books
 
 ###
+//get by title 
+
+GET  http://localhost:5000/books?search_query=&page=0&limit=
+
+
+###
 //get Users  by id
-GET http://localhost:5000/books/86470457-15fc-4862-a678-a96856ffa0b6
+POST http://localhost:5000/books/86470457-15fc-4862-a678-a96856ffa0b6
 
 ###
 //update 
@@ -27,9 +33,4 @@ Content-Type: application/json
 //delete Users 
 DELETE  http://localhost:5000/books/86470457-15fc-4862-a678-a96856ffa0b6
 
-
-###
-//get by title 
-
-GET http://localhost:5000/books/search?title=
 

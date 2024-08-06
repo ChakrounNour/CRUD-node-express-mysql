@@ -4,24 +4,32 @@ import BookService from "../../data/services/bookService";
 
 const initialState = {
   bookList: [],
-  isError: false,
-  isSuccess: false,
   isLoading: false,
+  isError: false,
   message: "",
-  response: "",
+  totalPage: 0,
+  limit: 5,
+  totalRow: 0,
+  page: 0,
+  keyword: "",
+  query: "",
+  msg: "",
 };
-
 export const getAllBook = createAsyncThunk(
-  "book/GetAllBook",
-  async (_, thunkApi) => {
+  "books/getAll",
+  async ({ keyword, page, limit }, thunkAPI) => {
     try {
-      const response = await BookService.getAll();
+      const response = await BookService.getAll(keyword, page, limit);
+      console.log("Fetched books:", response.data); // Log the fetched books
       return response.data;
     } catch (error) {
-      if (error.response) {
-        const message = error.response.data.message;
-        return thunkApi.rejectWithValue(message);
-      }
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -131,29 +139,54 @@ export const booksSlice = createSlice({
     clearResponse: (state) => {
       state.response = "";
     },
+    setQuery: (state, action) => {
+      state.query = action.payload;
+    },
+    setKeyword: (state, action) => {
+      state.keyword = action.payload;
+    },
+    setPage: (state, action) => {
+      console.log("New page:", action.payload);
+      state.page = action.payload;
+    },
+    setMsg: (state, action) => {
+      state.msg = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(createBook.pending, (state) => {
+      .addCase(getAllBook.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(createBook.fulfilled, (state, action) => {
+      .addCase(getAllBook.fulfilled, (state, action) => {
+        console.log("Action payload:", action.payload);
+        state.bookList = action.payload.result;
+        state.totalPage = action.payload.totalPage;
+        state.totalRow = action.payload.totalRows;
+        state.page = action.payload.page;
         state.isLoading = false;
+        state.isSuccess = true;
+      })
+      .addCase(getAllBook.rejected, (state, action) => {
+        state.message = action.payload;
+        state.isLoading = false;
+        state.isError = true;
+      })
+      .addCase(createBook.fulfilled, (state, action) => {
         state.bookList.push(action.payload);
         state.response = "add";
         state.isSuccess = true;
       })
       .addCase(createBook.rejected, (state, action) => {
-        state.isLoading = false;
         state.message = action.payload;
         state.isError = true;
       })
-      .addCase(getAllBook.fulfilled, (state, action) => {
+      .addCase(findBooksByTitle.fulfilled, (state, action) => {
         state.bookList = action.payload;
         state.isLoading = false;
         state.isSuccess = true;
       })
-      .addCase(getAllBook.rejected, (state, action) => {
+      .addCase(findBooksByTitle.rejected, (state, action) => {
         state.message = action.payload;
         state.isLoading = false;
         state.isError = true;
@@ -177,6 +210,13 @@ export const booksSlice = createSlice({
   },
 });
 
-export const { changeStateTrue, changeStateFalse, clearResponse } =
-  booksSlice.actions;
+export const {
+  changeStateTrue,
+  changeStateFalse,
+  clearResponse,
+  setQuery,
+  setKeyword,
+  setPage,
+} = booksSlice.actions;
+booksSlice.actions;
 export default booksSlice.reducer;

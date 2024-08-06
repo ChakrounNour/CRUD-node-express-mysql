@@ -50,7 +50,7 @@ export default function CustomButton({
           ? "border-2 ring-1 border-dashed border-blue500 bg-blue500 text-white ring-offset-4 ring-inset ring-blue500"
           : "",
         variant === "blueWithoutBorder" ? "text-blue500 underline " : "",
-        variant === "Border"
+        variant === "border"
           ? "mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
           : "",
         className
@@ -79,6 +79,8 @@ CustomButton.propTypes = {
     "primary-outline-border-light",
     "primary-outline-border",
     "blue",
+    "border",
+    "blue-outline",
     "blue-outline-border",
     "blueWithoutBorder",
   ]).isRequired,

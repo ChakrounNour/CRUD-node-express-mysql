@@ -52,7 +52,7 @@ function AddBook({ open, onClose, onSave }) {
             >
               Save
             </CustomButton>
-            <CustomButton variant={"Border"} onClick={onClose}>
+            <CustomButton variant={"border"} onClick={onClose}>
               Cancel
             </CustomButton>
           </div>

@@ -6,17 +6,21 @@ import CustomButtonEdit from "../molecules/CustomButtonEdit";
 import CustomButtonDelete from "../molecules/CustomButtonDelete";
 import Alerte from "../molecules/Alerte";
 import UpdateBook from "./UpdateBook";
-import ViewsBook from "./ViewsBook"; // Import the ViewsBook component
+import ViewsBook from "./ViewsBook";
 import { useDispatch } from "react-redux";
 import { deleteBook, getAllBook } from "../../features/books/bookSlice";
 import { useNavigate } from "react-router-dom";
+import ReactPaginate from "react-paginate";
 
 export default function Table({
   headers,
   rows,
-  pages,
-  currentPage,
-  onPageChange,
+  page,
+  keyword,
+  limit,
+  totalPage,
+  totalRow,
+  changePage,
   showEditButton = true,
   className,
   ...props
@@ -29,7 +33,17 @@ export default function Table({
   const [itemIdToDelete, setItemIdToDelete] = useState(null);
   const [currentEditBookId, setCurrentEditBookId] = useState(null);
   const [currentViewBookId, setCurrentViewBookId] = useState(null);
-
+  console.log("Table props:", {
+    headers,
+    rows,
+    page,
+    keyword,
+    limit,
+    totalPage,
+    totalRow,
+    showEditButton,
+    className,
+  });
   const openModal = (idBook) => {
     setItemIdToDelete(idBook);
     setIsModalOpen(true);
@@ -53,7 +67,7 @@ export default function Table({
   };
 
   const handleUpdateBook = () => {
-    dispatch(getAllBook());
+    dispatch(getAllBook({ keyword, page, limit }));
     setIsModalOpenUpdate(false);
   };
 
@@ -72,7 +86,7 @@ export default function Table({
         await dispatch(deleteBook(itemIdToDelete));
         navigate("/");
         closeModal();
-        dispatch(getAllBook());
+        dispatch(getAllBook({ keyword, page, limit }));
       } catch (error) {
         console.log("Error deleting book:", error);
       }
@@ -80,7 +94,7 @@ export default function Table({
   };
 
   return (
-    <div className={`overflow-x-auto ${className}`} {...props}>
+    <div className={`${className}`} {...props}>
       <table className="w-full bg-white border-collapse border border-gray-300 sm:rounded-md xs:text-xs sm:text-sm md:text-base lg:text-lg">
         <TableHeader headers={headers} />
         <tbody>
@@ -119,12 +133,37 @@ export default function Table({
           })}
         </tbody>
       </table>
-      <PagingMenu
-        pages={pages}
-        currentPage={currentPage}
-        onPageChange={onPageChange}
-        className="mt-4"
-      />
+      <p>
+        Total Rows: {totalRow} Page: {totalRow ? page + 1 : 0} of {totalPage}
+      </p>
+      <nav
+        className="flex justify-center mt-4"
+        role="navigation"
+        aria-label="pagination"
+      >
+        <ReactPaginate
+          previousLabel={
+            <span className="rounded-md text-gray-700">{"< Prev"}</span>
+          }
+          nextLabel={
+            <span className="rounded-md  text-gray-700">{"Next >"}</span>
+          }
+          pageCount={totalPage}
+          onPageChange={changePage}
+          containerClassName={"flex space-x-2"}
+          pageLinkClassName={
+            "px-3 py-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100"
+          }
+          previousLinkClassName={
+            "px-3 py-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100"
+          }
+          nextLinkClassName={
+            "px-3 py-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100"
+          }
+          activeLinkClassName={"bg-blue-500 text-white border-blue-500"}
+          disabledLinkClassName={"bg-gray-200 text-gray-400 cursor-not-allowed"}
+        />
+      </nav>
       <Alerte
         isModalOpen={isModalOpen}
         closeModal={closeModal}

@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Modal from "../atoms/modal/Modal";
-import { useDispatch } from "react-redux";
-import { getByIdBook } from "../../features/books/bookSlice";
 import { useNavigate } from "react-router";
 import BookService from "../../data/services/bookService";
 import CustomButton from "../atoms/button/Button";
 
 function ViewsBook({ open, onClose, idBook }) {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [title, setTitle] = useState("");

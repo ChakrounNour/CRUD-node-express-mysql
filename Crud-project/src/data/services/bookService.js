@@ -1,9 +1,10 @@
 import axios from "axios";
 import http from "../http-common";
 
-const getAll = async () => {
-  return http.get("/books");
+const getAll = async (keyword, page, limit) => {
+  return http.get(`/books?search_query=${keyword}&page=${page}&limit=${limit}`);
 };
+
 const get = (id) => {
   return http.get(`/books/${id}`);
 };
