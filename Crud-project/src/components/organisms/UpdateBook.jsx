@@ -1,47 +1,36 @@
 import React, { useEffect, useState } from "react";
 import Modal from "../atoms/modal/Modal";
-import { useDispatch } from "react-redux";
-import { updateBook } from "../../features/books/bookSlice";
-import { useNavigate } from "react-router";
-import BookService from "../../data/services/bookService";
+import { useDispatch, useSelector } from "react-redux";
 import CustomButton from "../atoms/button/Button";
+import { getByIdBook, updateBook } from "../../features/books/bookActions";
 
 function UpdateBook({ open, onClose, onSave, idBook }) {
+  const dispatch = useDispatch();
+  const { book } = useSelector((state) => state.book);
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const getBook = (idBook) => {
-    BookService.get(idBook)
-      .then((response) => {
-        setTitle(response.data.title);
-        setAuthor(response.data.author);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
 
   useEffect(() => {
     if (idBook) {
-      getBook(idBook);
+      dispatch(getByIdBook(idBook));
     }
-  }, [idBook]);
+  }, [idBook, dispatch]);
+
+  useEffect(() => {
+    if (book) {
+      setTitle(book.title);
+      setAuthor(book.author);
+    }
+  }, [book]);
 
   const handleUpdateClick = async () => {
     await dispatch(updateBook({ id: idBook, title, author }))
       .then(() => {
         onSave();
-        navigate("/");
       })
       .catch((e) => {
         console.log(e);
       });
-  };
-
-  const handleAnnulerClick = () => {
-    navigate("/");
   };
 
   return (
@@ -73,7 +62,7 @@ function UpdateBook({ open, onClose, onSave, idBook }) {
             >
               Save
             </CustomButton>
-            <CustomButton variant={"Border"} onClick={handleAnnulerClick}>
+            <CustomButton variant={"border"} onClick={onClose}>
               Cancel
             </CustomButton>
           </div>

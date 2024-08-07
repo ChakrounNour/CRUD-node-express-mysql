@@ -1,5 +1,5 @@
 import React from "react";
-import CustomInput from "../atoms/input/input";
+import CustomInput from "../atoms/input/Inputs";
 import CustomButton from "../atoms/button/Button";
 
 function InputwithButton({

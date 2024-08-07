@@ -1,35 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Modal from "../atoms/modal/Modal";
-import { useNavigate } from "react-router";
-import BookService from "../../data/services/bookService";
 import CustomButton from "../atoms/button/Button";
+import { useDispatch, useSelector } from "react-redux";
+import { getByIdBook } from "../../features/books/bookActions";
 
 function ViewsBook({ open, onClose, idBook }) {
-  const navigate = useNavigate();
-
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
+  const dispatch = useDispatch();
+  const { book } = useSelector((state) => state.book);
 
   useEffect(() => {
-    const fetchBook = async () => {
-      try {
-        const book = await BookService.get(idBook);
-        setTitle(book.data.title);
-        setAuthor(book.data.author);
-        console.log(book.data);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
     if (idBook) {
-      fetchBook();
+      dispatch(getByIdBook(idBook));
     }
-  }, [idBook]);
-
-  const handleAnnulerClick = () => {
-    navigate("/");
-  };
+  }, [idBook, dispatch]);
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -38,14 +21,14 @@ function ViewsBook({ open, onClose, idBook }) {
           <h3 className="text-lg font-black text-gray-800">View Book</h3>
           <div className="my-4">
             <div className="w-full p-2 border border-gray-300 rounded bg-gray-100">
-              <strong>Title:</strong> {title}
+              <strong>Title:</strong> {book?.title}
             </div>
             <div className="w-full p-2 border border-gray-300 rounded mt-2 bg-gray-100">
-              <strong>Author:</strong> {author}
+              <strong>Author:</strong> {book?.author}
             </div>
           </div>
           <div className="flex gap-4">
-            <CustomButton variant={"Border"} onClick={handleAnnulerClick}>
+            <CustomButton variant={"border"} onClick={onClose}>
               Cancel
             </CustomButton>
           </div>

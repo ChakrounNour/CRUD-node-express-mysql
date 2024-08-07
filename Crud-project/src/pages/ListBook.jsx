@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Table from "../components/organisms/Table";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  findBooksByTitle,
-  getAllBook,
-  setKeyword,
-  setPage,
-  setQuery,
-} from "../features/books/bookSlice";
+
 import InputwithButton from "../components/molecules/InputwithButton";
 import CustomButton from "../components/atoms/button/Button";
 import AddBook from "../components/organisms/AddBook";
+import { getAllBook } from "../features/books/bookActions";
+import { setKeyword, setPage, setQuery } from "../features/books/bookSlice";
 
 function ListBook() {
   const dispatch = useDispatch();
@@ -32,11 +28,9 @@ function ListBook() {
   useEffect(() => {
     dispatch(getAllBook({ keyword: keyword, page: page, limit: limit }));
   }, [dispatch, keyword, page, limit]);
-  const [currentPage, setCurrentPage] = useState(0);
 
   const changePage = ({ selected }) => {
     dispatch(setPage(selected));
-    setCurrentPage(selected);
   };
 
   const searchData = (e) => {
@@ -89,7 +83,6 @@ function ListBook() {
           totalRow={totalRow}
           keyword={keyword}
           limit={limit}
-          currentPage={currentPage}
           page={page}
           changePage={changePage}
         />

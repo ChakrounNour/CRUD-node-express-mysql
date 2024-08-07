@@ -1,25 +1,37 @@
-import React, { useState } from "react";
+import React from "react";
 import TableCell from "../atoms/table/TableCell";
-import CustomButtonDelete from "./CustomButtonDelete";
+import CustomButtonView from "./CustomButtonView";
 import CustomButtonEdit from "./CustomButtonEdit";
-import Modal from "../atoms/modal/Modal";
-import { BsTrash } from "react-icons/bs";
+import CustomButtonDelete from "./CustomButtonDelete";
 
 const TableRow = ({
   cells,
   onDelete,
+  idBook,
+  onEdit,
+  onView,
   showEditButton = true,
-  className,
   ...props
 }) => {
   return (
-    <tr className={className} {...props}>
-      {cells.map((cell, index) => (
-        <>
+    <>
+      <tr className={"border border-gray-300 hover:bg-gray-100"} {...props}>
+        {cells.map((cell, index) => (
           <TableCell key={index}>{cell}</TableCell>
-        </>
-      ))}
-    </tr>
+        ))}
+        <TableCell>
+          <CustomButtonView
+            className="btn-info"
+            onClick={() => onView(idBook)}
+          />
+          <CustomButtonEdit onClick={() => onEdit(idBook)} />
+          <CustomButtonDelete
+            className="btn btn-danger"
+            onClick={() => onDelete(idBook)}
+          />
+        </TableCell>
+      </tr>
+    </>
   );
 };
 

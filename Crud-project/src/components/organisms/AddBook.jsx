@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Modal from "../atoms/modal/Modal";
 import { useDispatch } from "react-redux";
-import { createBook, getAllBook } from "../../features/books/bookSlice";
 import CustomButton from "../atoms/button/Button";
+import { createBook, getAllBook } from "../../features/books/bookActions";
 
 function AddBook({ open, onClose, onSave }) {
   const [title, setTitle] = useState("");
@@ -22,7 +22,6 @@ function AddBook({ open, onClose, onSave }) {
     onClose();
     dispatch(getAllBook());
   };
-
   return (
     <Modal open={open} onClose={onClose}>
       <div className="text-center w-56">
