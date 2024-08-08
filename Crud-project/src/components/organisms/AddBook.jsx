@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import CustomButton from "../atoms/button/Button";
 import { createBook, getAllBook } from "../../features/books/bookActions";
 
-function AddBook({ open, onClose, onSave }) {
+function AddBook({ open, onClose, onSave, keyword, page, limit }) {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const dispatch = useDispatch();
@@ -20,7 +20,7 @@ function AddBook({ open, onClose, onSave }) {
     setAuthor("");
     onSave();
     onClose();
-    dispatch(getAllBook());
+    dispatch(getAllBook({ keyword: keyword, page: page, limit: limit }));
   };
   return (
     <Modal open={open} onClose={onClose}>

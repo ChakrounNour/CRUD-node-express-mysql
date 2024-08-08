@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Table from "../components/organisms/Table";
 import { useDispatch, useSelector } from "react-redux";
-
 import InputwithButton from "../components/molecules/InputwithButton";
 import CustomButton from "../components/atoms/button/Button";
 import AddBook from "../components/organisms/AddBook";
@@ -29,6 +28,12 @@ function ListBook() {
     dispatch(getAllBook({ keyword: keyword, page: page, limit: limit }));
   }, [dispatch, keyword, page, limit]);
 
+  useEffect(() => {
+    if (totalRow && page >= totalPage) {
+      dispatch(setPage(0));
+    }
+  }, [totalRow, totalPage, page, dispatch]);
+
   const changePage = ({ selected }) => {
     dispatch(setPage(selected));
   };
@@ -43,7 +48,8 @@ function ListBook() {
   const handleCloseModal = () => setIsModalOpen(false);
 
   const handleSaveBook = () => {
-    dispatch(getAllBook({ keyword, page, limit }));
+    dispatch(setPage(0));
+    dispatch(getAllBook({ keyword, page: 0, limit }));
     setIsModalOpen(false);
   };
 
@@ -61,6 +67,9 @@ function ListBook() {
           open={isModalOpen}
           onClose={handleCloseModal}
           onSave={handleSaveBook}
+          keyword={keyword}
+          limit={limit}
+          page={page}
         />
         <InputwithButton
           type={"text"}
